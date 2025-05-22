@@ -6,18 +6,19 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     public float turnSpeed = 20f;
-    //public PlayerControl controls;
+    public InputActionReference moveAction;
 
     Animator m_Animator;
     Vector3 m_Movement;
     Quaternion m_Rotation = Quaternion.identity;
     Rigidbody m_Rigidbody;
     AudioSource m_AudioSource;
+    Vector2 m_direction;
 
-    //private void Awake()
-    //{
-    //    controls.JohnLemon.Move.performed += _ => Move();
-    //}
+    private void Awake()
+    {
+        moveAction.action.performed += ctx => Move(ctx.ReadValue<Vector2>());
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -68,20 +69,21 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    void Move()
+    void Move(Vector2 direction)
     {
-        Debug.Log("John Lemon moved !");
+        Debug.Log("John Lemon moved !" + direction);
+        m_direction = direction;
     }
 
-    //private void OnEnable()
-    //{
-    //    controls.Enable();
-    //}
+    private void OnEnable()
+    {
+        moveAction.action.Enable();
+    }
 
-    //private void OnDisable()
-    //{
-    //    controls.Disable();
-    //}
+    private void OnDisable()
+    {
+        moveAction.action.Disable();
+    }
 
 
     void OnAnimatorMove()
