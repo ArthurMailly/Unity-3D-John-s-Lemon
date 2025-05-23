@@ -13,11 +13,12 @@ public class PlayerMovement : MonoBehaviour
     Quaternion m_Rotation = Quaternion.identity;
     Rigidbody m_Rigidbody;
     AudioSource m_AudioSource;
-    Vector2 m_direction;
+    Vector2 m_direction = Vector2.zero;
 
     private void Awake()
     {
         moveAction.action.performed += ctx => Move(ctx.ReadValue<Vector2>());
+        moveAction.action.canceled += ctx => Move(Vector2.zero);
     }
 
     // Start is called before the first frame update
@@ -31,17 +32,9 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        //float horizontal = Input.GetAxis("Horizontal");
-        //float vertical = Input.GetAxis("Vertical");
 
-        float horizontal = 0f;
-        float vertical = 0f;
-
-        // Gestion des touches ZQSD
-        if (Input.GetKey(KeyCode.Z)) vertical += 1f; // Avancer
-        if (Input.GetKey(KeyCode.S)) vertical -= 1f; // Reculer
-        if (Input.GetKey(KeyCode.Q)) horizontal -= 1f; // Gauche
-        if (Input.GetKey(KeyCode.D)) horizontal += 1f; // Droite
+        float horizontal = m_direction.x;
+        float vertical = m_direction.y;
 
         m_Movement.Set(horizontal, 0f, vertical);
         m_Movement.Normalize();
@@ -66,7 +59,6 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 desiredForward = Vector3.RotateTowards(transform.forward, m_Movement, turnSpeed * Time.deltaTime, 0f);
         m_Rotation = Quaternion.LookRotation(desiredForward);
-
     }
 
     void Move(Vector2 direction)
