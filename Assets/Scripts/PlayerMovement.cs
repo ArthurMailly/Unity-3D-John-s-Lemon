@@ -63,7 +63,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Move(Vector2 direction)
     {
-        Debug.Log("John Lemon moved !" + direction);
         m_direction = direction;
     }
 
